@@ -25,12 +25,11 @@ def get_pdb_publications(pdb_id: str) -> List[Dict]:
 
 
 def pdb_gpt() -> None:
-    pdb_id = st.sidebar.text_area("Input PDB ID to query about:")
+    pdb_id = query_text.text_input("Input PDB ID to query about:")
     pdb_id = pdb_id.strip()
 
     progress_bar = st.sidebar.progress(0)
     if pdb_id:
-        query_text.markdown(f"### Query: {pdb_id}")
         with col2:
             st.markdown(f"## Publications")
             pub_dicts_list = get_pdb_publications(pdb_id)
@@ -40,13 +39,18 @@ def pdb_gpt() -> None:
             assert pubs_dict[primary_pub_title]['primary']
             select_pub = st.selectbox(label='Select publication to view', options=pubs_dict.keys())
             utils.render_publication(select_pub, pubs_dict[select_pub], primary_pub_title)
+        with col1:
+            st.markdown("### Select publication to use as context for LLM.")
+            context_list = []
+            for title, content in pubs_dict.items():
+                if st.checkbox(label=title, value=content['primary']):
+                    context_list.append(title)
 
     progress_bar.empty()
 
     # Streamlit widgets automatically run the script from top to bottom. Since
     # this button is not connected to any other logic, it just causes a plain
     # rerun.
-    
     st.button("Re-run")
 
 pdb_gpt()
