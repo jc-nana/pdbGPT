@@ -1,9 +1,20 @@
 from typing import Any
 
 import numpy as np
+import requests
 
 import streamlit as st
 from streamlit.hello.utils import show_code
+
+async def get_pdb_publications(pdb_id: str) -> requests.models.Response:
+    base_url = "https://www.ebi.ac.uk/pdbe/api/pdb/entry/publications/"
+    response = requests.get(f"{base_url}{pdb_id}")
+    if response.status_code != 200:
+        raise Exception(f'get_pdb_publication({pdb_id}) get request failed with status {response.status_code}')
+    
+
+    return 
+
 
 
 def pdb_gpt_demo() -> None:
