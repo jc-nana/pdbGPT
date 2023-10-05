@@ -14,8 +14,24 @@
 
 import inspect
 import textwrap
-
+from typing import List, Dict
 import streamlit as st
+
+# CSS styling
+css = """
+    .rounded-text {
+        background-color: #404040;
+        border-radius: 10px;
+        padding: 5px;
+        display: inline;
+    }
+"""
+
+# Apply the CSS styling
+# st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
+
+# # Display the rounded text
+# st.markdown('<span class="rounded-text">Hello, World!</span>', unsafe_allow_html=True)
 
 
 def show_code(demo):
@@ -26,3 +42,28 @@ def show_code(demo):
         st.markdown("## Code")
         sourcelines, _ = inspect.getsourcelines(demo)
         st.code(textwrap.dedent("".join(sourcelines[1:])))
+
+def parse_publication_list(pub_list: List[Dict]):
+    parsed_dict = {}
+    for i, pub_dict in enumerate(pub_list):
+        parsed_dict[pub_dict['title']] = {
+            'doi': pub_dict['doi'],
+            'abstract': pub_dict['abstract'],
+            'primary': i == 0
+        }
+    return parsed_dict
+
+def render_publication(title: str, content: Dict, primary_pub_title: str):
+    st.markdown(f"### {title}")
+    if primary_pub_title == title:
+        # Display the rounded text
+        st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
+        st.markdown('<span class="rounded-text">Primary Citation</span>', unsafe_allow_html=True)
+    if content['doi'] is None:
+        st.markdown(f"doi: To be published.")
+    else:
+        st.markdown(f"doi: [{content['doi']}](https://doi.org/{content['doi']})")
+    for assignment, text in content['abstract'].items():
+        if text is not None:
+            st.markdown(f"###### {assignment}")
+            st.text(textwrap.fill(text, width=80))
