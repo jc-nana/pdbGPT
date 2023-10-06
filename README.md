@@ -1,7 +1,10 @@
-# Welcome to streamlit
+# PDB GPT
 
-This is the app you get when you run `streamlit hello`, extracted as its own app.
+## File Guide
+- streamlit_app.py: landing page of the app
+- llama_worker.py: logic of the LLM for processing publications related to the PDB id
 
-Edit [Hello.py](./Hello.py) to customize this app to your heart's desire. ❤️
+To develop/launch this app in your local environment, fork this repo, launch github codespaces.
+Within codespace, run "streamlit run streamlit_app.py" to launch the app.
 
-Check it out on [Streamlit Community Cloud](https://st-hello-app.streamlit.app/)
+
