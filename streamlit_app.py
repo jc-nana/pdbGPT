@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import textwrap
+from PDB_GPT import pdb_gpt
+import llama_worker as lw
 import streamlit as st
 from streamlit.logger import get_logger
 
@@ -20,31 +23,33 @@ LOGGER = get_logger(__name__)
 
 def run():
     st.set_page_config(
-        page_title="Hello",
-        page_icon="👋",
+        page_title="PDB GPT",
+        page_icon="🧬",
+        initial_sidebar_state="collapsed"
     )
 
-    st.write("# Welcome to Streamlit! 👋")
-
-    st.sidebar.success("Select a demo above.")
+    st.write("# PDB GPT")
 
     st.markdown(
         """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
-        ### Want to learn more?
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into our [documentation](https://docs.streamlit.io)
-        - Ask a question in our [community
-          forums](https://discuss.streamlit.io)
-        ### See more complex demos
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset](https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
+         PDB GPT lets you query a PDB id, and ask an LLM to read its related publication to answer your questions about the protein in the entry, or any molecules in the entry!
     """
     )
+    query_text = st.empty()
+    col1, col2 = st.columns(2)
+
+    context_list = pdb_gpt(col1, col2, query_text)
+    with col1:
+      example_query = "What molecules are of interest?"
+      st.markdown(f"#### Example Query: {example_query}")
+      example_response = st.empty()
+      query = st.text_input("#### Enter question to ask about this PDB entry using the selected publication as context.")
+      respose = st.empty()
+        
+    query_engine = lw.create_query_engine(context_list)
+    example_response.markdown(f"###### {query_engine.query(example_query)}")
+    if query:
+      respose.markdown(f"###### {query_engine.query(query)}")
 
 
 if __name__ == "__main__":

@@ -7,12 +7,6 @@ from typing import List, Dict
 import streamlit as st
 import llama_worker as lw
 
-# layout
-st.set_page_config(page_title="PDB GPT", page_icon="🧬")
-st.markdown("# PDB GPT")
-st.sidebar.header("PDB GPT")
-query_text = st.empty()
-col1, col2 = st.columns(2)
 
 def get_pdb_publications(pdb_id: str) -> List[Dict]:
     pdb_id = str.lower(pdb_id)
@@ -25,14 +19,15 @@ def get_pdb_publications(pdb_id: str) -> List[Dict]:
 
 
 
-def pdb_gpt() -> List[str]:
-    pdb_id = query_text.text_input("Input PDB ID to query about:")
+def pdb_gpt(_col1, _col2, _query_text) -> List[str]:
+    pdb_id = _query_text.text_input("Input PDB ID to query about: (e.g. 1cbs, 125L)",
+                                    "1cbs")
     pdb_id = pdb_id.strip()
     context_list = []
 
     progress_bar = st.sidebar.progress(0)
     if pdb_id:
-        with col2:
+        with _col2:
             st.markdown(f"## Publications")
             pub_dicts_list = get_pdb_publications(pdb_id)
             pubs_dict = utils.parse_publication_list(pub_dicts_list)
@@ -41,7 +36,7 @@ def pdb_gpt() -> List[str]:
             assert pubs_dict[primary_pub_title]['primary']
             select_pub = st.selectbox(label='Select publication to view', options=pubs_dict.keys())
             utils.render_publication(select_pub, pubs_dict[select_pub], primary_pub_title)
-        with col1:
+        with _col1:
             st.markdown("### Select publication to use as context for LLM.")
             for title, content in pubs_dict.items():
                 if st.checkbox(label=title, value=content['primary']):
@@ -56,9 +51,3 @@ def pdb_gpt() -> List[str]:
     st.button("Re-run")
     return context_list
 
-context_list = pdb_gpt()
-st.text(textwrap.fill(''.join(context_list)))
-vector_index = lw.generate_vector_index_from_publications(context_list)
-query_engine = lw.create_query_engine(context_list)
-# st.text(textwrap.fill(vector_index.as_query_engine().query("what molecules are of interest?")))
-st.text(query_engine.query("what molecules are of interest?"))
