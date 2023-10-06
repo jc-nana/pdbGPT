@@ -3,4 +3,4 @@ numpy
 pandas
 pydeck
 streamlit
-llama-index
+llama_index
