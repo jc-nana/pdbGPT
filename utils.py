@@ -17,6 +17,7 @@ import textwrap
 from typing import List, Dict
 import streamlit as st
 
+
 # CSS styling
 css = """
     .rounded-text {
@@ -67,3 +68,5 @@ def render_publication(title: str, content: Dict, primary_pub_title: str):
         if text is not None:
             st.markdown(f"###### {assignment}")
             st.text(textwrap.fill(text, width=80))
+
+            

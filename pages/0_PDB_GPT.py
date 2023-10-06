@@ -5,6 +5,7 @@ import numpy as np
 import requests
 from typing import List, Dict
 import streamlit as st
+import llama_worker as lw
 
 # layout
 st.set_page_config(page_title="PDB GPT", page_icon="🧬")
@@ -24,9 +25,10 @@ def get_pdb_publications(pdb_id: str) -> List[Dict]:
 
 
 
-def pdb_gpt() -> None:
+def pdb_gpt() -> List[str]:
     pdb_id = query_text.text_input("Input PDB ID to query about:")
     pdb_id = pdb_id.strip()
+    context_list = []
 
     progress_bar = st.sidebar.progress(0)
     if pdb_id:
@@ -41,10 +43,10 @@ def pdb_gpt() -> None:
             utils.render_publication(select_pub, pubs_dict[select_pub], primary_pub_title)
         with col1:
             st.markdown("### Select publication to use as context for LLM.")
-            context_list = []
             for title, content in pubs_dict.items():
                 if st.checkbox(label=title, value=content['primary']):
                     context_list.append(title)
+                
 
     progress_bar.empty()
 
@@ -52,5 +54,11 @@ def pdb_gpt() -> None:
     # this button is not connected to any other logic, it just causes a plain
     # rerun.
     st.button("Re-run")
+    return context_list
 
-pdb_gpt()
+context_list = pdb_gpt()
+st.text(textwrap.fill(''.join(context_list)))
+vector_index = lw.generate_vector_index_from_publications(context_list)
+query_engine = lw.create_query_engine(context_list)
+# st.text(textwrap.fill(vector_index.as_query_engine().query("what molecules are of interest?")))
+st.text(query_engine.query("what molecules are of interest?"))
