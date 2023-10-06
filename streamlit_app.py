@@ -38,18 +38,18 @@ def run():
     query_text = st.empty()
     col1, col2 = st.columns(2)
 
-    context_list = pdb_gpt(col1, col2, query_text)
     with col1:
-      example_query = "What molecules are of interest?"
-      st.markdown(f"#### Example Query: {example_query}")
-      example_response = st.empty()
       query = st.text_input("#### Enter question to ask about this PDB entry using the selected publication as context.")
       respose = st.empty()
+      example_query = "What molecules are of interest?"
+      st.markdown(f"###### Example Query: {example_query}")
+      example_response = st.empty()
+    context_list = pdb_gpt(col1, col2, query_text)
         
     query_engine = lw.create_query_engine(context_list)
-    example_response.markdown(f"###### {query_engine.query(example_query)}")
+    example_response.markdown(f"*{query_engine.query(example_query)}")
     if query:
-      respose.markdown(f"###### {query_engine.query(query)}")
+      respose.markdown(f"*{query_engine.query(query)}")
 
 
 if __name__ == "__main__":

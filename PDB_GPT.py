@@ -28,7 +28,7 @@ def pdb_gpt(_col1, _col2, _query_text) -> List[str]:
     progress_bar = st.sidebar.progress(0)
     if pdb_id:
         with _col2:
-            st.markdown(f"## Publications")
+            st.markdown(f"#### Publications")
             pub_dicts_list = get_pdb_publications(pdb_id)
             pubs_dict = utils.parse_publication_list(pub_dicts_list)
             primary_pub_title = pub_dicts_list[0]['title']
@@ -37,7 +37,7 @@ def pdb_gpt(_col1, _col2, _query_text) -> List[str]:
             select_pub = st.selectbox(label='Select publication to view', options=pubs_dict.keys())
             utils.render_publication(select_pub, pubs_dict[select_pub], primary_pub_title)
         with _col1:
-            st.markdown("### Select publication to use as context for LLM.")
+            st.markdown("#### Select publication to use as context for LLM.")
             for title, content in pubs_dict.items():
                 if st.checkbox(label=title, value=content['primary']):
                     context_list.append(title)
