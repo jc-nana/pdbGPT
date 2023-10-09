@@ -14,7 +14,7 @@
 
 import textwrap
 from PDB_GPT import pdb_gpt
-import llama_worker as lw
+from llama_worker import LlamaWorker
 import streamlit as st
 from streamlit.logger import get_logger
 
@@ -35,6 +35,18 @@ def run():
          PDB GPT lets you query a PDB id, and ask an LLM to read its related publication to answer your questions about the protein in the entry, or any molecules in the entry!
     """
     )
+    openai_key = st.text_input("🤖 Input your OpenAI API key for best experience:")
+    st.info(icon="ℹ️", body="Providing an OpenAI API key will improve your experience of the app. By default, this app uses a rate-limited Cohere API or AI21 API.")
+
+    if openai_key:
+       lw = LlamaWorker(
+          embedding_api=("OpenAI", openai_key), 
+          llm_api=("OpenAI", openai_key))
+    else:
+       lw = LlamaWorker(
+          embedding_api=("Cohere", st.secrets["COHERE_API_KEY"]), 
+          llm_api=("AI21", st.secrets["AI21_API_KEY"]))
+
     query_text = st.empty()
     col1, col2 = st.columns(2)
 
