@@ -11,12 +11,13 @@ import llama_worker as lw
 def get_pdb_publications(pdb_id: str) -> Dict:
     try:
         pub_dicts_list = get_pdb_publications_from_ebi(pdb_id)
-        pimary_title, pubs_dict = utils.parse_publication_list(pub_dicts_list)
+        pimary_title, pubs_dict = utils.parse_ebi_publication_list(pub_dicts_list)
     except Exception:
-        entry_response, pubmed_response = get_pdb_publications_from_rcsb(pdb_id)
-        pimary_title, pubs_dict = utils.parse_rcsb_publication_dict(entry_response, pubmed_response)
-    else:
-        raise Exception("get_pdb_publications failed for both rcsb and ebi")
+        try:
+            entry_response, pubmed_response = get_pdb_publications_from_rcsb(pdb_id)
+            pimary_title, pubs_dict = utils.parse_rcsb_publication_dict(entry_response, pubmed_response)
+        except:
+            raise Exception("get_pdb_publications failed for both rcsb and ebi")
     return pimary_title, pubs_dict
 
 def get_pdb_publications_from_rcsb(pdb_id: str) -> List[Dict]:
