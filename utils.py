@@ -44,7 +44,7 @@ def show_code(demo):
         sourcelines, _ = inspect.getsourcelines(demo)
         st.code(textwrap.dedent("".join(sourcelines[1:])))
 
-def parse_publication_list(pub_list: List[Dict]):
+def parse_ebi_publication_list(pub_list: List[Dict]):
     parsed_dict = {}
     for i, pub_dict in enumerate(pub_list):
         parsed_dict[pub_dict['title']] = {
@@ -52,7 +52,19 @@ def parse_publication_list(pub_list: List[Dict]):
             'abstract': pub_dict['abstract'],
             'primary': i == 0
         }
-    return parsed_dict
+    return pub_list[0]['title'], parsed_dict
+
+# currently only extract information for primary citation, TODO: integrate with pubmed API to get all citations
+def parse_rcsb_publication_dict(entry_response: Dict, pubmed_response: Dict):
+    parsed_dict = {}
+    citations = entry_response['citation']
+    primary_citation = [pub for pub in citations if pub["id"]=="primary"][0]
+    parsed_dict[primary_citation["title"]] = {
+        'doi': pubmed_response['rcsb_pubmed_doi'],
+        'abstract': {"abstract": pubmed_response['rcsb_pubmed_abstract_text']},
+        'primary': True
+    }
+    return primary_citation["title"], parsed_dict
 
 def render_publication(title: str, content: Dict, primary_pub_title: str):
     st.markdown(f"### {title}")
