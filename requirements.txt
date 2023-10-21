@@ -7,3 +7,5 @@ llama-index
 cohere
 ai21
 openai
+py3dmol
+stmol

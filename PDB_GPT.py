@@ -72,5 +72,5 @@ def pdb_gpt(_col1, _col2, _query_text) -> List[str]:
     # this button is not connected to any other logic, it just causes a plain
     # rerun.
     st.button("Re-run")
-    return context_list
+    return context_list, pdb_id
 

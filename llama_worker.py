@@ -9,9 +9,6 @@ from llama_index.composability import ComposableGraph
 from langchain.llms import Cohere, AI21, OpenAIChat
 from langchain.embeddings import CohereEmbeddings, OpenAIEmbeddings
 
-
-
-
 class LlamaWorker:
     # embedding/llm api is a tuple (api_provider, api_key), e.g. ("openai", "your_api_key")
     def __init__(self, embedding_api, llm_api):
