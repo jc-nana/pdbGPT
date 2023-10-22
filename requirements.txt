@@ -9,3 +9,4 @@ ai21
 openai
 py3dmol
 stmol
+jupyter
