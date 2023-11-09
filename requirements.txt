@@ -10,3 +10,4 @@ openai
 py3dmol
 stmol
 jupyter
+ipython_genutils
