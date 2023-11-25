@@ -4,6 +4,7 @@ pandas
 pydeck
 streamlit
 llama-index
+langchain
 cohere
 ai21
 openai
