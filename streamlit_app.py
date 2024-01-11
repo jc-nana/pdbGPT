@@ -87,6 +87,5 @@ def query(_query_engine, input_query):
       return _query_engine.query(input_query)
 
 
-
 if __name__ == "__main__":
     run()
