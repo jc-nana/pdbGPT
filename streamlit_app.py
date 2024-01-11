@@ -40,14 +40,7 @@ def run():
       openai_key = st.text_input("🤖 Input your OpenAI API key for best experience:")
       st.info(icon="ℹ️", body="Providing an OpenAI API key will improve your experience of the app. By default, this app uses a rate-limited Cohere API or AI21 API call.")
 
-      if openai_key:
-        lw = LlamaWorker(
-            embedding_api=("OpenAI", openai_key), 
-            llm_api=("OpenAI", openai_key))
-      else:
-        lw = LlamaWorker(
-            embedding_api=("Cohere", st.secrets["COHERE_API_KEY"]), 
-            llm_api=("AI21", st.secrets["AI21_API_KEY"]))
+      lw = create_llama_worker(openai_key)
       query_text = st.empty()
 
     
@@ -76,9 +69,22 @@ def run():
     if input_query:
       respose.markdown(f"*{query(query_engine, input_query)}")
 
-@st.cache
-def query(query_engine, query):
-    return query_engine.query(query)
+
+@st.cache_resource
+def create_llama_worker(openai_key):
+   if openai_key:
+      return LlamaWorker(embedding_api=("OpenAI", openai_key), llm_api=("OpenAI", openai_key))
+   else:
+      return LlamaWorker(embedding_api=("Cohere", st.secrets["COHERE_API_KEY"]), 
+                         llm_api=("AI21", st.secrets["AI21_API_KEY"]))
+
+@st.cache_resource
+def create_query_engine(lw, context_list):
+   return lw.create_query_engine(context_list)
+
+@st.cache_data
+def query(query_engine, input_query):
+    return query_engine.query(input_query)
 
 
 

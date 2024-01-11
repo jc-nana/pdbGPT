@@ -47,7 +47,7 @@ def pdb_gpt(_col1, _col2, _query_text) -> List[str]:
     progress_bar = st.sidebar.progress(0)
     if pdb_id:
         with _col2:
-            st.markdown(f"#### Publications")
+            st.markdown("#### Publications")
             # pub_dicts_list = get_pdb_publications_from_ebi(pdb_id)
             primary_pub_title, pubs_dict = get_pdb_publications(pdb_id)
             # primary_pub_title = pub_dicts_list[0]['title']
