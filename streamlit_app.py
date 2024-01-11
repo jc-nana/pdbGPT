@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import textwrap
-from PDB_GPT import pdb_gpt
+from pdb_gpt import pdb_gpt
 from llama_worker import LlamaWorker
 import streamlit as st
 from streamlit.logger import get_logger
@@ -57,7 +56,7 @@ def run():
     col1, col2 = st.columns(2)
 
     with col1:
-      query = st.text_input("#### Enter question to ask about this PDB entry using the selected publication as context.")
+      input_query = st.text_input("#### Enter question to ask about this PDB entry using the selected publication as context.")
       respose = st.empty()
       example_query = "What molecules are of interest?"
       st.markdown(f"###### Example Query: {example_query}")
@@ -73,9 +72,14 @@ def run():
 
         
     query_engine = lw.create_query_engine(context_list)
-    example_response.markdown(f"*{query_engine.query(example_query)}")
-    if query:
-      respose.markdown(f"*{query_engine.query(query)}")
+    example_response.markdown(f"*{query(query_engine, example_query)}")
+    if input_query:
+      respose.markdown(f"*{query(query_engine, input_query)}")
+
+@st.cache
+def query(query_engine, query):
+    return query_engine.query(query)
+
 
 
 if __name__ == "__main__":

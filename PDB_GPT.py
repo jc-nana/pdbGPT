@@ -1,11 +1,7 @@
-from typing import Any
-import utils
-import textwrap
-import numpy as np
-import requests
 from typing import List, Dict
+import requests
 import streamlit as st
-import llama_worker as lw
+import utils
 
 
 def get_pdb_publications(pdb_id: str) -> Dict:
