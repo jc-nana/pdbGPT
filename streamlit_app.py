@@ -83,8 +83,8 @@ def create_query_engine(lw, context_list):
    return lw.create_query_engine(context_list)
 
 @st.cache_data
-def query(query_engine, input_query):
-    return query_engine.query(input_query)
+def query(_query_engine, input_query):
+      return _query_engine.query(input_query)
 
 
 
