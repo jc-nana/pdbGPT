@@ -3,8 +3,14 @@ numpy
 pandas
 pydeck
 streamlit
-llama-index
-langchain
+llama-index==0.10.12
+llama-index-core==0.10.12
+llama-index-llms-langchain==0.1.3
+llama-index-embeddings-langchain==0.1.2
+langchain==0.1.8
+langchain-community==0.0.24
+langchain-core==0.1.26
+langchain_openai==0.0.7
 cohere
 ai21
 openai
