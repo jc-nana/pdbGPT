@@ -66,14 +66,12 @@ def run():
             xyzview.setStyle(
                 {'cartoon': {'color': 'spectrum'}, 'background-color': 'yellow'})
             showmol(xyzview, height=molbox_size, width=molbox_size)
-        try:
-            query_engine = lw.create_query_engine(context_list)
-        except CohereAPIError:
-            rateLimitErrorPlaceholder.error(
-                "Rate limit for Cohere API reached. Please provide openAI API key to use this app.")
-        example_response.markdown(f"*{query(query_engine, example_query)}")
+        query_engine = lw.create_query_engine(context_list)
+        example_response.markdown(
+            f"*{query(query_engine, example_query, rateLimitErrorPlaceholder)}")
         if input_query:
-            response.markdown(f"*{query(query_engine, input_query)}")
+            response.markdown(
+                f"*{query(query_engine, input_query, rateLimitErrorPlaceholder)}")
 
 
 @st.cache_resource
@@ -90,7 +88,12 @@ def create_query_engine(lw, context_list):
 
 
 @st.cache_data
-def query(_query_engine, input_query):
+def query(_query_engine, input_query, errorDisplay):
+    try:
+        _query_engine.query(input_query)
+    except CohereAPIError:
+        errorDisplay.error(
+            "Rate limit for Cohere API reached. Please provide openAI API key to use this app.")
     return _query_engine.query(input_query)
 
 
