@@ -42,6 +42,8 @@ def run():
             "🤖 Input your OpenAI API key for best experience:")
         st.info(icon="ℹ️", body="Providing an OpenAI API key will improve your experience of the app. By default, this app uses a rate-limited Cohere API or AI21 API call.")
 
+        rateLimitErrorPlaceholder = st.empty()
+
         lw = create_llama_worker(openai_key)
         query_text = st.empty()
 
@@ -67,7 +69,7 @@ def run():
         try:
             query_engine = lw.create_query_engine(context_list)
         except CohereAPIError:
-            st.error(
+            rateLimitErrorPlaceholder.error(
                 "Rate limit for Cohere API reached. Please provide openAI API key to use this app.")
         example_response.markdown(f"*{query(query_engine, example_query)}")
         if input_query:
