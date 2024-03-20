@@ -18,6 +18,7 @@ import streamlit as st
 from streamlit.logger import get_logger
 import py3Dmol
 from stmol import showmol
+from cohere.error import CohereAPIError
 
 LOGGER = get_logger(__name__)
 
@@ -49,7 +50,7 @@ def run():
     with col1:
         input_query = st.text_input(
             "#### Enter question to ask about this PDB entry using the selected publication as context.")
-        respose = st.empty()
+        response = st.empty()
         example_query = "What molecules are of interest?"
         st.markdown(f"###### Example Query: {example_query}")
         example_response = st.empty()
@@ -63,11 +64,14 @@ def run():
             xyzview.setStyle(
                 {'cartoon': {'color': 'spectrum'}, 'background-color': 'yellow'})
             showmol(xyzview, height=molbox_size, width=molbox_size)
-
-    query_engine = lw.create_query_engine(context_list)
-    example_response.markdown(f"*{query(query_engine, example_query)}")
-    if input_query:
-        respose.markdown(f"*{query(query_engine, input_query)}")
+        try:
+            query_engine = lw.create_query_engine(context_list)
+        except CohereAPIError:
+            st.error(
+                "Rate limit for Cohere API reached. Please provide openAI API key to use this app.")
+        example_response.markdown(f"*{query(query_engine, example_query)}")
+        if input_query:
+            response.markdown(f"*{query(query_engine, input_query)}")
 
 
 @st.cache_resource
