@@ -70,7 +70,7 @@ def run():
             query_engine = lw.create_query_engine(context_list)
         except CohereAPIError:
             rateLimitErrorPlaceholder.error(
-                "Rate limit for Cohere API reached. Please provide openAI API key to use this app.")
+                "Due to the high volume of visit, rate limit for Cohere API reached. Please provide OpenAI API key to use this app.")
             return
         example_response.markdown(f"*{query(query_engine, example_query)}")
         if input_query:
