@@ -11,7 +11,7 @@ langchain==0.1.8
 langchain-community==0.0.24
 langchain-core==0.1.26
 langchain_openai==0.0.7
-cohere
+cohere==4.42
 ai21
 openai
 py3dmol
